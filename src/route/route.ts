@@ -1,12 +1,13 @@
 import express from 'express'
 export const router = express()
-import { listarNews, cadastrarNews, buscarUmaNews } from '../controladores/controladores'
+import { listarNews, cadastrarNews, buscarUmaNews, editarNews } from '../controladores/controladores'
 
 
 
 router.get('/listar', listarNews)
 router.get('/buscar/:id', buscarUmaNews)
 router.post('/cadastrar', cadastrarNews)
+router.put('/editar', editarNews)
 
 
 

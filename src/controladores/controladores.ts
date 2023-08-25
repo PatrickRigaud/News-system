@@ -1,4 +1,4 @@
-import { listarNewsQuery, cadastrarNewsQuery, buscarUmaNewsQuery } from "../data/news_data"
+import { listarNewsQuery, cadastrarNewsQuery, buscarUmaNewsQuery, editarUmaNewsQuery } from "../data/news_data"
 import { Request, Response } from 'express';
 
 
@@ -30,9 +30,9 @@ export const buscarUmaNews = async (req: Request, res: Response) => {
 
 export const cadastrarNews = async (req: Request, res: Response) => {
     try {
-        const {colaborador, tema, caso, dev, chamado, data, observacao} = req.body
+        const {colaborador, tema, caso, data, dev, chamado, observacao} = req.body
 
-    await cadastrarNewsQuery(colaborador, tema, caso, dev, chamado, data, observacao)
+    await cadastrarNewsQuery(colaborador, tema, caso, data, dev, chamado, observacao)
 
     
     return res.status(201).json({message: 'News cadastrada com sucesso'})
@@ -45,14 +45,19 @@ export const cadastrarNews = async (req: Request, res: Response) => {
 
 export const editarNews = async (req: Request, res: Response) => {
     try {
-        const {colaborador, tema, caso, dev, chamado, data, observacao} = req.body
+        const {id, colaborador, tema, caso, data, dev, chamado, observacao} = req.body
     
-        
-    
-    
-    
+        const queryEncontrada = await buscarUmaNewsQuery(id)
+        if(queryEncontrada.rows.length === 0){
+            return res.status(404).json({message: "News não encontrada"})
+        }
+
+        await editarUmaNewsQuery(id, colaborador, tema, caso, data, dev, chamado, observacao)
+
+        return res.status(204).json()
     
     } catch (error) {
-        
+    console.log(error)
+    return res.status(400).json({message: error})
     }
 }
