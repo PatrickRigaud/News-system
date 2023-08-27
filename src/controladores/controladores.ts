@@ -1,4 +1,4 @@
-import { listarNewsQuery, cadastrarNewsQuery, buscarUmaNewsQuery, editarUmaNewsQuery } from "../data/news_data"
+import { listarNewsQuery, cadastrarNewsQuery, buscarUmaNewsQuery, editarUmaNewsQuery, filtrarPalavrasChavesQuery} from "../data/news_data"
 import { Request, Response } from 'express';
 
 
@@ -45,17 +45,32 @@ export const cadastrarNews = async (req: Request, res: Response) => {
 
 export const editarNews = async (req: Request, res: Response) => {
     try {
-        const {id, colaborador, tema, caso, data, dev, chamado, observacao} = req.body
+        const {id, colaborador, tema, caso, data, dev, chamado, feedback} = req.body
     
         const queryEncontrada = await buscarUmaNewsQuery(id)
         if(queryEncontrada.rows.length === 0){
             return res.status(404).json({message: "News não encontrada"})
         }
 
-        await editarUmaNewsQuery(id, colaborador, tema, caso, data, dev, chamado, observacao)
+        await editarUmaNewsQuery(id, colaborador, tema, caso, data, dev, chamado, feedback)
 
         return res.status(204).json()
     
+    } catch (error) {
+    console.log(error)
+    return res.status(400).json({message: error})
+    }
+}
+
+type PalavraChave = string;
+
+export const filtrarPalavrasChaves = async (req: Request, res: Response) => {
+    try {
+        const {filtro} = req.query
+        const casosEncontrados = await filtrarPalavrasChavesQuery(filtro as PalavraChave)
+
+
+        return res.status(201).json(casosEncontrados.rows)
     } catch (error) {
     console.log(error)
     return res.status(400).json({message: error})
