@@ -20,3 +20,7 @@ export const editarUmaNewsQuery = (id: number, colaborador: string, tema: string
 export const filtrarPalavrasChavesQuery = (palavraChave:string) => {
     return db.query("select * from news_call where colaborador ilike any($1) or dev ilike any($1) or caso ilike any($1) or feedback ilike any($1) or data ilike any($1);", [palavraChave])
 }
+
+export const deletarNewsQuery = (id:Number) => {
+    return db.query('delete from news_call where id = $1 returning *', [id])
+}

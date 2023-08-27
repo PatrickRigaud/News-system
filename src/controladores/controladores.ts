@@ -1,4 +1,4 @@
-import { listarNewsQuery, cadastrarNewsQuery, buscarUmaNewsQuery, editarUmaNewsQuery, filtrarPalavrasChavesQuery} from "../data/news_data"
+import { listarNewsQuery, cadastrarNewsQuery, buscarUmaNewsQuery, editarUmaNewsQuery, filtrarPalavrasChavesQuery, deletarNewsQuery} from "../data/news_data"
 import { Request, Response } from 'express';
 
 
@@ -74,5 +74,20 @@ export const filtrarPalavrasChaves = async (req: Request, res: Response) => {
     } catch (error) {
     console.log(error)
     return res.status(400).json({message: error})
+    }
+}
+
+export const deletarNews = async (req: Request, res: Response) => {
+    try {
+        const {id} = req.params
+        const encontrou = await deletarNewsQuery(Number(id))
+        console.log(encontrou)
+
+        encontrou.rows.length > 0 ? res.status(204).json() : res.status(400).json({message: 'News não encontrada'})
+        
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({message: error})
     }
 }
